@@ -38,4 +38,7 @@ public interface EmployeeMapper {
 	 * 根据主键动态修改属性
 	 */
 	void update(Employee employee);
+
+	@Select("SELECT * FROM employee WHERE id = #{id}")
+	Employee getById(Long id);
 }
