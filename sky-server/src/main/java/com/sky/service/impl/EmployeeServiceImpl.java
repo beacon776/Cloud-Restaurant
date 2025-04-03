@@ -33,8 +33,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * 员工登录
      *
-     * @param employeeLoginDTO
-     * @return
      */
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
@@ -94,14 +92,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 启用禁用员工账号
-     * @param status
-     * @param id
      */
     @Override
     public void startOrStop(Integer status, Long id) {
-        /*Employee employee = new Employee();
-        employee.setId(id);
-        employee.setStatus(status);*/
+
         Employee employee = Employee.builder()
                 .status(status)
                 .id(id)
@@ -111,8 +105,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 根据id查询员工
-     * @param id
-     * @return
+     * @param id 员工的唯一标识ID
+     * @return 查询到的 Employee 对象，如果不存在则返回 null
      */
     @Override
     public Employee getById(Long id) {
@@ -123,7 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 更新员工信息
-     * @param employeeDTO
+     * @param employeeDTO 封装好的参数类
      */
     @Override
     public void update(EmployeeDTO employeeDTO) {
