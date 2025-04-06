@@ -40,6 +40,9 @@ public interface DishMapper {
     @Select("SELECT * FROM dish WHERE id = #{id}")
     Dish getById(Long id);
 
+    @Select("SELECT * FROM dish WHERE category_id = #{categoryId}")
+    List<Dish> getByCategoryId(Long categoryId);
+
 
     @Delete("DELETE FROM dish WHERE id = #{id}")
     void delete(Long id);
