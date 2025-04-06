@@ -48,8 +48,8 @@ public class AliOssUtil {
             // 1. 上传文件
             ossClient.putObject(new PutObjectRequest(bucketName, objectName, inputStream));
 
-            // 2. 生成签名URL（有效期1小时）
-            Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000); // 1小时后过期
+            // 2. 生成签名URL（有效期7天（阿里云不让设置更长的时间了））
+            Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000 * 24 * 7); // 7天后过期
             GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, objectName);
             request.setExpiration(expiration);
             request.setMethod(HttpMethod.GET); // 指定GET访问
