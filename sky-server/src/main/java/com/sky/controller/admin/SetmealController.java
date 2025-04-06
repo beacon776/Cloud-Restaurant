@@ -25,9 +25,11 @@ public class SetmealController {
 
 	@Autowired
 	private SetmealService setmealService;
-	@Autowired
-	private SetmealMapper setmealMapper;
 
+	/**
+	 * 插入套餐
+	 * @param setmealDTO
+	 */
 	@PostMapping
 	@ApiOperation("新增套餐")
 	public Result insert(@RequestBody SetmealDTO setmealDTO) {
@@ -35,6 +37,11 @@ public class SetmealController {
 		return Result.success();
 	}
 
+	/**
+	 * 分页查询套餐
+	 * @param setmealPageQueryDTO
+	 * @return
+	 */
 	@GetMapping("/page")
 	@ApiOperation("分页查询套餐")
 	public Result<PageResult> page(SetmealPageQueryDTO setmealPageQueryDTO) {
@@ -42,6 +49,11 @@ public class SetmealController {
 		return Result.success(page);
 	}
 
+	/**
+	 * 批量删除套餐
+	 * @param ids
+	 * @return
+	 */
 	@DeleteMapping
 	@ApiOperation("批量删除套餐")
 	public Result deleteBatch(@RequestParam List<Long> ids) {
@@ -49,6 +61,11 @@ public class SetmealController {
 		return Result.success();
 	}
 
+	/**
+	 * 修改套餐
+	 * @param setmealDTO
+	 * @return
+	 */
 	@PutMapping
 	@ApiOperation("修改套餐")
 	public Result update(@RequestBody SetmealDTO setmealDTO) {
@@ -56,6 +73,11 @@ public class SetmealController {
 		return Result.success();
 	}
 
+	/**
+	 * 根据id获取套餐
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/{id}")
 	@ApiOperation("根据id获取套餐")
 	public Result<SetmealVO> getById(@PathVariable Long id) {
@@ -63,6 +85,11 @@ public class SetmealController {
 		return Result.success(setmealVO);
 	}
 
+	/**
+	 * 更新套餐在售停售状态
+	 * @param id
+	 * @param status
+	 */
 	@PostMapping("/status/{status}")
 	public Result updateStatus(@PathVariable String status, @RequestParam Long id) {
 		setmealService.updateStatusById(id, status);

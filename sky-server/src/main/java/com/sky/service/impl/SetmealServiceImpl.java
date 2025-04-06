@@ -35,6 +35,10 @@ public class SetmealServiceImpl implements SetmealService {
 	@Autowired
 	private SetmealDishMapper setmealDishMapper;
 
+	/**
+	 * 插入套餐
+	 * @param setmealDTO
+	 */
 	@AutoFill(OperationType.INSERT)
 	@Transactional
 	@Override
@@ -51,6 +55,11 @@ public class SetmealServiceImpl implements SetmealService {
 		setmealDishMapper.insertBatch(dishes);
 	}
 
+	/**
+	 * 分页查询套餐
+	 * @param setmealPageQueryDTO
+	 * @return
+	 */
 	@Override
 	public PageResult page(SetmealPageQueryDTO setmealPageQueryDTO) {
 		PageHelper.startPage(setmealPageQueryDTO.getPage(), setmealPageQueryDTO.getPageSize());
@@ -58,6 +67,10 @@ public class SetmealServiceImpl implements SetmealService {
 		return new PageResult(setmealVOS.getTotal(), setmealVOS.getResult());
 	}
 
+	/**
+	 * 批量删除套餐以及对应菜品
+	 * @param setmealIds
+	 */
 	@Override
 	public void deleteBatch(List<Long> setmealIds) {
 
@@ -65,7 +78,7 @@ public class SetmealServiceImpl implements SetmealService {
 		for (Long setmealId : setmealIds) {
 			Setmeal setmeal = setmealMapper.getById(setmealId);
 			if (setmeal.getStatus() == 1) {
-				throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+				throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
 			}
 		}
 		// 删除套餐表 + 套餐菜品关系表的数据
@@ -74,6 +87,10 @@ public class SetmealServiceImpl implements SetmealService {
 
 	}
 
+	/**
+	 * 更新套餐
+	 * @param setmealDTO
+	 */
 	@Override
 	public void update(SetmealDTO setmealDTO) {
 		Setmeal setmeal = new Setmeal();
@@ -91,6 +108,11 @@ public class SetmealServiceImpl implements SetmealService {
 
 	}
 
+	/**
+	 * 通过id获取套餐
+	 * @param id
+	 * @return
+	 */
 	@Override
 	public SetmealVO getById(Long id) {
 		Setmeal setmeal = setmealMapper.getById(id);
@@ -102,6 +124,11 @@ public class SetmealServiceImpl implements SetmealService {
 		return setmealVO;
 	}
 
+	/**
+	 * 更新套餐在售停售状态
+	 * @param id
+	 * @param status
+	 */
 	@Override
 	public void updateStatusById(Long id, String status) {
 		setmealMapper.updateStatusById(id, status);
