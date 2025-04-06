@@ -10,6 +10,9 @@ import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface SetmealMapper {
@@ -31,4 +34,15 @@ public interface SetmealMapper {
     Setmeal getByCategoryId(Long categoryId);
 
 
+    void deleteBatch(List<Long> setmealIds);
+
+    @Select("SELECT * FROM setmeal WHERE id = #{setmealId}")
+    Setmeal getById(Long setmealId);
+
+    @AutoFill(OperationType.UPDATE)
+    void update(Setmeal setmeal);
+
+
+    @Update("UPDATE setmeal SET status = #{status} WHERE id = #{id}")
+    void updateStatusById(Long id, String status);
 }
