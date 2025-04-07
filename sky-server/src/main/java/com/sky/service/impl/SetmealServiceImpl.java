@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.StringContent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +47,10 @@ public class SetmealServiceImpl implements SetmealService {
 	public void insert(SetmealDTO setmealDTO) {
 		Setmeal setmeal = new Setmeal();
 		BeanUtils.copyProperties(setmealDTO, setmeal);
+		// 新增的套餐默认不起售
+		setmeal.setStatus(StatusConstant.DISABLE);
 		setmealMapper.insert(setmeal);
 		Long setmealId = setmeal.getId();
-
 		List<SetmealDish> dishes = setmealDTO.getSetmealDishes();
 		dishes.forEach(dish -> {
 			dish.setSetmealId(setmealId);
