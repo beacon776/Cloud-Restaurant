@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,9 @@ import java.util.List;
 public class DishController {
 	@Autowired
 	private DishService dishService;
+
+	@Autowired
+	private RedisTemplate redisTemplate;
 
 	/**
 	 * 新增菜品
@@ -73,8 +77,15 @@ public class DishController {
 
 	@GetMapping("/list")
 	@ApiOperation("根据分类id查询菜品")
-	public Result<List<Dish>> listQuery(@RequestParam Long categoryId) {
-		List<Dish> dishes = dishService.listQuery(categoryId);
+	public Result<List<DishVO>> listQuery(@RequestParam Long categoryId) {
+		String key = "dish_" + categoryId;
+		List<DishVO> list = (List<DishVO>) redisTemplate.opsForValue().get(key);
+		if (list != null && list.size() > 0) {
+			return Result.success(list);
+		}
+		List<DishVO> dishes = dishService.listQuery(categoryId);
+		redisTemplate.opsForValue().set(key, dishes);
+
 		return Result.success(dishes);
 	}
 }
