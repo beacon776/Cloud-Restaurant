@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -39,6 +40,9 @@ public class DishController {
 	public Result save(@RequestBody DishDTO dishDTO) {
 		log.info("新增菜品：{}", dishDTO);
 		dishService.saveWithFlavor(dishDTO);
+
+		String key = "dish_" + dishDTO.getCategoryId();
+		redisTemplate.delete(key);
 		return Result.success();
 	}
 
@@ -57,13 +61,16 @@ public class DishController {
 	@DeleteMapping
 	@ApiOperation("菜品批量删除")
 	public Result delete(@RequestParam List<Long> ids) {
+		log.info("批量删除菜品的id为:{}", ids);
 		dishService.deleteBatch(ids);
+		cleanCache("dish_*");
 		return Result.success();
 	}
 
 	@GetMapping("{id}")
 	@ApiOperation("根据id查询菜品信息")
 	public Result<DishVO> get(@PathVariable Long id) {
+		log.info("根据id查询菜品信息:{}", id);
 		DishVO dishVO = dishService.get(id);
 		return Result.success(dishVO);
 	}
@@ -71,7 +78,10 @@ public class DishController {
 	@PutMapping
 	@ApiOperation("修改菜品")
 	public Result update(@RequestBody DishDTO dishDTO) {
+		log.info("修改菜品:{}", dishDTO);
 		dishService.updateDishWithFlavor(dishDTO);
+		cleanCache("dish_*");
+
 		return Result.success();
 	}
 
@@ -87,5 +97,15 @@ public class DishController {
 		redisTemplate.opsForValue().set(key, dishes);
 
 		return Result.success(dishes);
+	}
+
+	/**
+	 * 清理缓存数据
+	 * @param pattern
+	 */
+	private void cleanCache(String pattern) {
+		// (暂时性的)将以dish_开头的缓存全删掉
+		Set keys = redisTemplate.keys(pattern);
+		redisTemplate.delete(keys);
 	}
 }
